@@ -1,0 +1,26 @@
+import app from "./app.js";
+import { envVars } from "./configs/index.js";
+import { prisma } from "./lib/prisma.js";
+
+async function connectDB() {
+  try {
+    await prisma.$connect();
+    console.log("Connected to the database successfully.");
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
+}
+connectDB();
+
+if (envVars.NODE_ENV !== "production") {
+  const PORT = envVars.PORT || 5000;
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+
+  server.on("error", (err) => {
+    console.error("Server failed to start:", err);
+  });
+}
+
+export default app;
