@@ -20,11 +20,23 @@ model User{
   active_status                                  ActiveStatus                          @default(ACTIVE)
   is_deleted                                     Boolean                               @default(false)
 
+  role_id                                      String?
+  role                                           UserRole?                             @relation("user_role_relation", fields: [role_id], references: [role_name])
+
+  position_id                                    String?
+  position                                       UserPosition?                         @relation("user_position_relation", fields: [position_id], references: [id], onDelete: Restrict)
+
+  management_staff_profile          ManagementStaff?
+
   father_details_id                              String?
   father_details                                 FatherDetails?                    @relation("user_father_details", fields: [father_details_id], references: [id], onDelete: Restrict)
 
   mother_details_id                              String?
   mother_details                                 MotherDetails?                    @relation("user_mother_details", fields: [mother_details_id], references: [id], onDelete: Restrict)
+
+   permanent_address                              PermanentAddress?
+  present_address                                PresentAddress?
+  
   
   @@unique([full_name, mobile_number], name: "user_full_name_mobile_unique")
   @@map("users")

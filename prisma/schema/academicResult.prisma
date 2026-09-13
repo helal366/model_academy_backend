@@ -1,0 +1,25 @@
+model AcademicResult {
+  id             String                       @id @default(uuid())
+  ssc_result     String?
+  dakhil_result  String?
+  hsc_result     String?
+  alim_result    String?
+  hons_result    String?
+  fazil_result   String?
+  masters_result String?
+  kamil          String?
+  
+  staff_id     String?                      @unique
+  staff        ManagementStaff? @relation(fields: [staff_id], references: [id], onDelete: Cascade)
+  
+  // created_by_id  String?
+  // created_by     User?                        @relation("academic_result_created_by", fields: [created_by_id], references: [id])
+  
+  // updated_by_id  String?
+  // updated_by     User?                        @relation("academic_result_updated_by", fields: [updated_by_id], references: [id])
+  
+  created_at     DateTime                     @default(now())
+  updated_at     DateTime?                    @updatedAt
+
+  @@map("academic_results")
+}

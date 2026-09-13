@@ -1,0 +1,29 @@
+model ManagementStaff{
+    id                                String                            @id @default(uuid())
+  full_name String
+  mobile_number                     String
+  is_mobile_verified                             Boolean                               @default(false)
+  email                         String @unique
+
+  academic_results                  AcademicResult?
+  teaching_working_experience_year  Int?
+  teaching_working_experience_month Int?
+  alternative_contact_no            String[]
+
+  current_position_id               String
+  current_position                  UserPosition                      @relation("management_current_position", fields: [current_position_id], references: [id])
+  
+  current_role_id                   String
+  current_role                      UserRole                          @relation("management_current_role", fields: [current_role_id], references: [id])
+  is_currenly_active_staff          Boolean   @default(true)
+  
+  user_id                           String                            @unique
+  user_primary_data                 User                              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  
+  spouse_information                SpouseInformation?
+  positions                         UserPosition[]                    @relation("managements_positions")
+  roles                             UserRole[]                        @relation("roles_managements")
+
+@@unique([full_name, mobile_number], name: "management_full_name_mobile_unique")
+  @@map("management_staffs")
+}

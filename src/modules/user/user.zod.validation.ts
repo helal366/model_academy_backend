@@ -11,11 +11,11 @@ export const userCreateZodSchema = z4.object({
     weight_in_kg: z4.number("Invalid number.").optional(),
     religion: z4.enum(Religion, "Invalid religion").optional(),
     nationality: z4.string().optional(),
-    birth_certificate_number: z4.string().optional(),
-    nid_number: z4.string("Invalid nid number").optional(),
-    email: z4.string().check(z4.email("Invalid email format")).optional(),
-    position: z4.string( "Invalid position name").toUpperCase().optional(),
-    role: z4.string( "Invalid user role").toUpperCase().optional()
+    birth_certificate_number: z4.string("Invalid birth certificate number format").optional(),
+    nid_number: z4.string("Invalid nid number format").optional(),
+    email: z4.string().check(z4.email("Invalid email format")),
+    position: z4.string( "Invalid user position format").toUpperCase(),
+    role: z4.string( "Invalid user role format").toUpperCase()
 })
 
 export type TUserCreatePayload = z4.infer<typeof userCreateZodSchema>;
