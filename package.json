@@ -5,8 +5,7 @@
   "imports": {
     "#db-client": {
       "development": "./src/generated/prisma/client.ts",
-      "default": "./src/generated/prisma/client.js",
-      "types": "./src/generated/prisma/client.ts"
+      "default": "./src/generated/prisma/client.js"
     }
   },
   "scripts": {
