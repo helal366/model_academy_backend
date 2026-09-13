@@ -1,0 +1,23 @@
+model FatherDetails {
+  id                        String           @id @default(uuid())
+  father_name               String
+  nid_no                    String?
+  occupation                String?
+  job_title                 String?
+  educational_qualification EducationDegree?
+  monthly_income            String?
+  mobile_no_1               String?
+  mobile_no_2               String?
+  mobile_no_3               String?
+  
+  user                      User[]           @relation("user_father_details")
+
+//   created_by_id             String?
+//   created_by                User?            @relation("user_father_details_created_by", fields: [created_by_id], references: [id])
+//   updated_by_id             String?
+//   updated_by                User?            @relation("user_father_details_updated_by", fields: [updated_by_id], references: [id])
+  
+  created_at                DateTime         @default(now())
+  updated_at                DateTime?        @updatedAt
+  @@map("father_details")
+}

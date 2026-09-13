@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
   entry: ["src/server.ts"],
-  format: ["esm", "cjs"],  //
+  format: ["esm"],  //
   target: "esnext",
   outDir: "dist",
   clean: true,
@@ -10,7 +10,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   platform: "node",
-  // dts: false,
+  external: [],
   // Add banner to shim require() for CJS dependencies in ESM context
   banner: {
     js: `

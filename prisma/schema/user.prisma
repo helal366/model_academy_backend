@@ -1,5 +1,32 @@
 model User{
-    id String @id @default(uuid())
-    full_name String 
-    email String
+   id                                             String                                @id @default(uuid())
+  full_name                                      String
+  mobile_number                                  String
+  is_mobile_verified                             Boolean                               @default(false)
+  gender                                         Gender
+  email                                          String?                               @unique
+  blood_group                                    BloodGroup?
+  date_of_birth                                  DateTime?
+  height_in_cm                                   Float?
+  weight_in_kg                                   Float?
+  religion                                       Religion?
+  nationality                                    String                                @default("Bangladeshi")
+  birth_certificate_number                       String?
+  nid_number                                     String?
+  photo_url                                      String?
+  
+  user_name                                      String?                               @unique
+  user_password                                  String?                               @default("sm1234ps")
+  active_status                                  ActiveStatus                          @default(ACTIVE)
+  is_deleted                                     Boolean                               @default(false)
+
+  father_details_id                              String?
+  father_details                                 FatherDetails?                    @relation("user_father_details", fields: [father_details_id], references: [id], onDelete: Restrict)
+
+  mother_details_id                              String?
+  mother_details                                 MotherDetails?                    @relation("user_mother_details", fields: [mother_details_id], references: [id], onDelete: Restrict)
+  
+  @@unique([full_name, mobile_number], name: "user_full_name_mobile_unique")
+  @@map("users")
+
 }
