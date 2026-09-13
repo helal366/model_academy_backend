@@ -15,9 +15,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "paths": {
-      "#db-client": ["./src/generated/client/client.ts"] // Adjusted path mapping
-    }
+    "customConditions": ["development"],
   },
   "include": ["src/**/*", "prisma.config.ts"], // Include prisma.config.ts here
   "exclude": ["node_modules", "prisma/generated"] // Remove prisma.config.ts from here
