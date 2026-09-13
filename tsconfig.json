@@ -5,7 +5,7 @@
    "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2023",
-    "types": ["node", "express", "cookie-parser", "cors", "jsonwebtoken"],
+    // "types": ["node", "express", "cookie-parser", "cors", "jsonwebtoken"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
