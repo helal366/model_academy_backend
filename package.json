@@ -4,16 +4,18 @@
   "description": "",
   "imports": {
     "#db-client": {
-      "types": "./src/generated/prisma/client.ts",
-      "default": "./dist/src/generated/prisma/client.js",
-      "development": "./src/generated/prisma/client.ts"
+      "development": "./src/generated/prisma/client.ts",
+      "default": "./src/generated/prisma/client.js",
+      "types": "./src/generated/prisma/client.ts"
     }
   },
   "scripts": {
     "dev": "tsx watch --conditions=development src/server.ts",
-    "build": "shx rm -rf dist && pnpm prisma generate && tsc && shx mkdir -p dist/src/generated && shx cp -r src/generated/prisma dist/src/generated/prisma",
+    "typecheck": "tsc --noEmit",
+    "build": "shx rm -rf dist && pnpm prisma generate && tsup && shx mkdir -p dist/src/generated && shx cp -r src/generated/prisma dist/src/generated/prisma",
+    "start": "node dist/server.js",
     "postinstall": "prisma generate",
-    "vercel-build": "pnpm prisma generate && pnpm prisma migrate deploy && tsc && shx mkdir -p dist/src/generated && shx cp -r src/generated/prisma dist/src/generated/prisma",
+    "vercel-build": "pnpm prisma generate && tsup && shx mkdir -p dist/src/generated && shx cp -r src/generated/prisma dist/src/generated/prisma",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
@@ -42,6 +44,7 @@
     "pg": "^8.23.0",
     "prisma": "7.10.0",
     "shx": "^0.4.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "ws": "^8.21.3"
