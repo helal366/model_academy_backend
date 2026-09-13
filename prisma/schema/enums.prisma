@@ -1,0 +1,83 @@
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+enum Religion {
+  ISLAM
+  HINDU
+  CHRISTIAN
+  BUDDO
+  OTHER
+}
+
+enum Quranic_Section {
+  NURANI
+  NAZERA
+  HIFZ
+}
+
+enum WeekDays {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum Months {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+enum ActiveStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum EducationDegree {
+  SSC
+  HSC
+  BSC
+  B_COM
+  B_ARTS
+  MSC
+  M_COM
+  M_ARTS
+  PHD
+  ALIM
+  DAKHIL
+  KAMIL
+  FAZIL
+  OTHERS
+}

@@ -8,7 +8,7 @@ generator client {
   output   = "../../src/generated/prisma"
   moduleFormat        = "esm"
   importFileExtension = "js"
-   previewFeatures = ["views"]
+  previewFeatures = ["views"]
 }
 
 datasource db {
