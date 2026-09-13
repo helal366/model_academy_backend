@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { envVars } from "../configs";
+import { envVars } from "../configs/index.js";
 import { Prisma } from "#db-client";
 import { AppError } from "../helperFunctions/globalError/globalErrorHelperFunction";
 
