@@ -101,9 +101,9 @@ pnpm prisma init --output ./src/generated/prisma
 ```
 "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "shx rm -rf dist && pnpm prisma generate && tsc",
+    "build": "shx rm -rf dist && pnpm prisma generate && tsup",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy && tsc",
+    "vercel-build": "prisma generate && prisma migrate deploy && tsup",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
@@ -113,8 +113,8 @@ pnpm prisma init --output ./src/generated/prisma
 "imports": {
     "#db-client": {
       "types": "./src/generated/prisma/client.ts",
-      "default": "./dist/src/generated/client/client.js",
-      "development": "./src/generated/client/client.ts"
+      "default": "./dist/src/generated/prisma/client.js",
+      "development": "./src/generated/prisma/client.ts"
     }
 }
 ```
@@ -124,7 +124,7 @@ pnpm prisma init --output ./src/generated/prisma
 ```
 {
   "compilerOptions": {
-    "rootDir": "./", // Change from "./src" to "./" to support root config files
+    "rootDir": "./",        // Change from "./src" to "./" to support root config files
     "outDir": "./dist",
    "module": "ESNext",
     "moduleResolution": "bundler",

@@ -4,8 +4,7 @@
   "description": "",
   "imports": {
     "#db-client": {
-      "development": "./src/generated/prisma/client.ts",
-      "default": "./src/generated/prisma/client.ts"
+      "default": "./src/generated/prisma/client.js"
     }
   },
   "scripts": {
