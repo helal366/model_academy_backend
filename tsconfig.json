@@ -2,9 +2,9 @@
   "compilerOptions": {
     "rootDir": "./", // Change from "./src" to "./" to support root config files
     "outDir": "./dist",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2023",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2023",
     "types": ["node", "express", "cookie-parser", "cors", "jsonwebtoken"],
     "sourceMap": true,
     "declaration": true,
@@ -17,6 +17,6 @@
     "skipLibCheck": true,
     "customConditions": ["development"],
   },
-  "include": ["src/**/*", "prisma.config.ts"], // Include prisma.config.ts here
-  "exclude": ["node_modules", "prisma/generated"] // Remove prisma.config.ts from here
+  "include": ["src/**/*", "prisma7.config.ts"], // Include prisma.config.ts here
+  "exclude": ["node_modules", "prisma/generated", "dist"] // Remove prisma.config.ts from here
 }

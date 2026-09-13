@@ -2,9 +2,9 @@
   "name": "model_academy",
   "version": "1.0.0",
   "description": "",
+  "main": "dist/server.js",
   "imports": {
     "#db-client": {
-      "development": "./src/generated/prisma/client.ts",
       "default": "./dist/src/generated/prisma/client.js"
     }
   },
