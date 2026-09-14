@@ -11,7 +11,7 @@ const createPosition= catchAsync(async(req:Request, res:Response, next:NextFunct
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.CREATED,
-        message: `Position created successfully.`,
+        message: `New Position created successfully.`,
         data: result
     })
 
