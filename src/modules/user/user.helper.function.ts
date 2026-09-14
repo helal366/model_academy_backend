@@ -8,7 +8,10 @@ interface IExistancePayload{
     full_name: string;
     mobile_number: string;
 }
-
+interface IUserCount{
+    role: string;
+    mobile_number: string;
+}
 const userExistance = async({role, full_name, mobile_number}:IExistancePayload)=>{
     let user=null;
     if(role==="SUPER_ADMIN" || role ==="TEACHER_ADMIN" || role ==="ADMIN" || role === "MANAGEMENT"){
@@ -29,6 +32,24 @@ const userExistance = async({role, full_name, mobile_number}:IExistancePayload)=
     return user
 }
 
+const userCount = async({role, mobile_number}:IUserCount)=>{
+    let userCount=0;
+    if(role==="SUPER_ADMIN" || role ==="TEACHER_ADMIN" || role ==="ADMIN" || role === "MANAGEMENT"){
+        userCount = await prisma.managementStaff.count({
+            where:{
+                mobile_number
+            }
+        })
+    }else if(role === "STUDENT"){
+
+    }else if(role === "GOVERNING_BODY"){
+
+    }else if(role === "TEACHER" || role === "ACADEMIC"){
+
+    }
+    return userCount
+}
 export const userHelperFunction = {
-    userExistance
+    userExistance,
+    userCount
 }
