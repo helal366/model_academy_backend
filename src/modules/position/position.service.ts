@@ -1,13 +1,17 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../helperFunctions/globalError/globalErrorHelperFunction";
+import { clearCachePositions } from "../../helperFunctions/cachedData/cache_positions";
 import { prisma } from "../../lib/prisma";
 import { TCreatePositionZodSchema } from "./position.zod.validation";
 
 const createPosition = async (payload: TCreatePositionZodSchema) => {
   const { position_name, role_name } = payload;
 
+  const cleanPosition = position_name.trim().toUpperCase();
+  const cleanRole = role_name.trim().toUpperCase();
+
   const existingPosition = await prisma.userPosition.findUnique({
-    where: { position_name },
+    where: { position_name: cleanPosition },
     select: { id: true },
   });
   if (existingPosition) {
@@ -18,7 +22,7 @@ const createPosition = async (payload: TCreatePositionZodSchema) => {
   }
 
   const existingRole = await prisma.userRole.findUnique({
-    where: { role_name },
+    where: { role_name: cleanRole },
     select: { id: true },
   });
   if (!existingRole) {
@@ -30,13 +34,14 @@ const createPosition = async (payload: TCreatePositionZodSchema) => {
 
   const createdNewPosition = await prisma.userPosition.create({
     data: {
-      position_name,
+      position_name: cleanPosition,
       role: {
         connect: { id: existingRole.id },
       },
     },
   });
 
+  clearCachePositions();
   return createdNewPosition;
 };
 

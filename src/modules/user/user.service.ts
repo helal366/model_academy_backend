@@ -10,37 +10,41 @@ const createUser = async (payload: TUserCreatePayload) => {
   const { full_name, mobile_number, email, position_name, role_name, ...rest } =
     payload;
 
+  // make role and position to upper case
+  const cleanRole = role_name.trim().toUpperCase();
+  const cleanPosition = position_name.trim().toUpperCase();
+
   // check role validity
-  const roleExists = await findRoleExistance(role_name);
+  const roleExists = await findRoleExistance(cleanRole);
   if (!roleExists) {
     throw new AppError(
-      `Provided Role: ${role_name} is not a valid role.`,
+      `Provided Role: ${cleanRole} is not a valid role.`,
       StatusCodes.NOT_FOUND,
     );
   }
 
   // check that the position belongs to the requested role
   const positionExists = await checkRolePositionPair({
-    role_name,
-    position_name,
+    role_name: cleanRole,
+    position_name: cleanPosition,
   });
 
   // check user existance
   const userExist = await userHelperFunction.userExistance({
-    role_name,
+    role_name: cleanRole,
     full_name,
     mobile_number,
   });
   if (userExist) {
     throw new AppError(
-      `User already exists with Name: ${full_name}, Mobile number: ${mobile_number} and Role: ${role_name}`,
+      `User already exists with Name: ${full_name}, Mobile number: ${mobile_number} and Role: ${cleanRole}`,
       StatusCodes.CONFLICT,
     );
   }
 
   // create user name
   const userCount = await userHelperFunction.userCount({
-    role_name,
+    role_name: cleanRole,
     mobile_number,
   });
   let user_name = mobile_number;
@@ -49,14 +53,14 @@ const createUser = async (payload: TUserCreatePayload) => {
   }
 
   // create user and management staff
-  const user = await prisma.user.create({
+  const newUser = await prisma.user.create({
     data: {
       full_name,
       mobile_number,
       email,
       ...rest,
       role: {
-        connect: { role_name },
+        connect: { role_name: cleanRole },
       },
       position: {
         connect: { id: positionExists.id },
@@ -68,16 +72,16 @@ const createUser = async (payload: TUserCreatePayload) => {
           email,
           user_name,
           current_position: {
-            connect: { id: positionExists.id },
+            connect: { id: positionExists.id },    //connection require unique constraints
           },
           current_role: {
-            connect: { id: roleExists.id },
+            connect: { id: roleExists.id },     //connection require unique constraints
           },
         },
       },
     },
   });
-  return payload;
+  return newUser;
 };
 export const userServices = {
   createUser,
