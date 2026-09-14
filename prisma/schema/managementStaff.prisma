@@ -24,6 +24,6 @@ model ManagementStaff{
   positions                         UserPosition[]                    @relation("managements_positions")
   roles                             UserRole[]                        @relation("roles_managements")
 
-@@unique([full_name, mobile_number], name: "management_full_name_mobile_unique")
+  @@unique([full_name, mobile_number], name: "management_full_name_mobile_unique")
   @@map("management_staffs")
 }

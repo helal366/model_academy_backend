@@ -5,9 +5,9 @@ import { userServices } from "./user.servide.js";
 
 const createuser = catchAsync(async(req:Request, res: Response, next: NextFunction)=>{
     const payload : TUserCreatePayload = req.body;
-    const result = userServices.createUser(payload)
-    console.log({payload});
-    res.send({payload})
+    const result =await userServices.createUser(payload)
+    console.log({result});
+    res.send({result})
 })
 
 export const userController = {

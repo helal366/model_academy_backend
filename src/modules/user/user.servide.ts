@@ -1,9 +1,16 @@
+import { StatusCodes } from "http-status-codes";
+import { AppError } from "../../helperFunctions/globalError/globalErrorHelperFunction";
 import { userHelperFunction } from "./user.helper.function";
 import { TUserCreatePayload } from "./user.zod.validation"
 
 const createUser=async(payload: TUserCreatePayload)=>{
-    const {role} = payload ;
-    const userExist=await userHelperFunction.userExistance(role)
+    const {role, full_name, mobile_number} = payload ;
+    const userExist=await userHelperFunction.userExistance({role, full_name, mobile_number});
+    if(userExist){
+        throw new AppError(`User already exists with Name: ${full_name}, Mobile number: ${mobile_number} and Role: ${role}`, StatusCodes.CONFLICT)
+    }
+    console.log({payload})
+    return payload
 }
 export const userServices={
     createUser
