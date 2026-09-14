@@ -14,8 +14,8 @@ export const userCreateZodSchema = z4.object({
     birth_certificate_number: z4.string("Invalid birth certificate number format").optional(),
     nid_number: z4.string("Invalid nid number format").optional(),
     email: z4.string().check(z4.email("Invalid email format")),
-    position: z4.string( "Invalid user position format").toUpperCase(),
-    role: z4.string( "Invalid user role format").toUpperCase()
+    position_name: z4.string( "Invalid user position format").toUpperCase(),
+    role_name: z4.string( "Invalid user role format").toUpperCase()
 })
 
 export type TUserCreatePayload = z4.infer<typeof userCreateZodSchema>;

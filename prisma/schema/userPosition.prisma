@@ -3,11 +3,12 @@ model UserPosition {
   position_name             String            @unique
 
   role_id                   String
-  role                      UserRole          @relation("role_position_relation", fields: [role_id], references: [id])
+  role                      UserRole          @relation("role_position_relation", fields: [role_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
   
   current_management_staffs ManagementStaff[] @relation("management_current_position")
   user                      User[]            @relation("user_position_relation")
   management_staffs         ManagementStaff[] @relation("managements_positions")
+  
   //   created_by_id             String?
   //   created_by                User?                         @relation("user_position_created_by", fields: [created_by_id], references: [id])
   //   updated_by_id             String?

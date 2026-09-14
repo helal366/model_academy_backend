@@ -1,26 +1,26 @@
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { envVars } from "../configs/index.js";
+import { envVars } from "../config/index.js";
 import { Prisma } from "#db-client";
 import { AppError } from "../helperFunctions/globalError/globalErrorHelperFunction.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const globalErrorHandler = async (
-	err: any,
-	_req: Request,
-	res: Response,
-	_next: NextFunction,
+  err: any,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
 ) => {
-	if (envVars.NODE_ENV === "development") {
-		console.log("Error from Global Error Handler", err);
-	}
+  if (envVars.NODE_ENV === "development") {
+    console.log("Error from Global Error Handler", err);
+  }
 
-	let statusCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
-	let message = err.message || "Internal Server Error";
-	const errorName = err.name || "Internal Server Error";
-	// let errorDetails = err.stack
+  let statusCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
+  let message = err.message || "Internal Server Error";
+  const errorName = err.name || "Internal Server Error";
+  // let errorDetails = err.stack
 
-	if (err instanceof Prisma.PrismaClientValidationError) {
+  if (err instanceof Prisma.PrismaClientValidationError) {
     statusCode = StatusCodes.BAD_REQUEST;
     message = "You have provided incorrect field type or missing fields";
   } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -54,14 +54,14 @@ export const globalErrorHandler = async (
     message = err.message;
   }
 
-	res.status(statusCode).json({
-		success: false,
-		statusCode: statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-		name:
-			envVars.NODE_ENV === "development" ? errorName : "Internal Server Error",
-		message:
-			envVars.NODE_ENV === "development" ? message : "Internal Server Error",
-		error: envVars.NODE_ENV === "development" ? err : undefined,
-		stack: envVars.NODE_ENV === "development" ? err.stack : undefined,
-	});
+  res.status(statusCode).json({
+    success: false,
+    statusCode: statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+    name:
+      envVars.NODE_ENV === "development" ? errorName : "Internal Server Error",
+    message:
+      envVars.NODE_ENV === "development" ? message : "Internal Server Error",
+    error: envVars.NODE_ENV === "development" ? err : undefined,
+    stack: envVars.NODE_ENV === "development" ? err.stack : undefined,
+  });
 };

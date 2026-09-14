@@ -18,18 +18,18 @@ model User {
   is_deleted    Boolean      @default(false)
 
   role_id String?
-  role    UserRole? @relation("user_role_relation", fields: [role_id], references: [role_name])
+  role    UserRole? @relation("user_role_relation", fields: [role_id], references: [role_name], onDelete: Restrict, onUpdate: Cascade)
 
   position_id String?
-  position    UserPosition? @relation("user_position_relation", fields: [position_id], references: [id], onDelete: Restrict)
+  position    UserPosition? @relation("user_position_relation", fields: [position_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   management_staff_profile ManagementStaff?
 
   father_details_id String?
-  father_details    FatherDetails? @relation("user_father_details", fields: [father_details_id], references: [id], onDelete: Restrict)
+  father_details    FatherDetails? @relation("user_father_details", fields: [father_details_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   mother_details_id String?
-  mother_details    MotherDetails? @relation("user_mother_details", fields: [mother_details_id], references: [id], onDelete: Restrict)
+  mother_details    MotherDetails? @relation("user_mother_details", fields: [mother_details_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   permanent_address PermanentAddress?
   present_address   PresentAddress?

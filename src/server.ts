@@ -1,5 +1,5 @@
 import app from "./app.js";
-import { envVars } from "./configs/index.js";
+import { envVars } from "./config/index.js";
 import { prisma } from "./lib/prisma.js";
 import "dotenv/config";
 

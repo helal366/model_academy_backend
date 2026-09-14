@@ -1,9 +1,9 @@
 export interface IExistancePayload{
-    role: string;
+    role_name: string;
     full_name: string;
     mobile_number: string;
 }
 export interface IUserCount{
-    role: string;
+    role_name: string;
     mobile_number: string;
 }

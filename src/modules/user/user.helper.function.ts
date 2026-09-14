@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { IExistancePayload, IUserCount } from "./user.interface";
 
-const userExistance = async({role, full_name, mobile_number}:IExistancePayload)=>{
+const userExistance = async({role_name: role, full_name, mobile_number}:IExistancePayload)=>{
     let user=null;
     if(role==="SUPER_ADMIN" || role ==="TEACHER_ADMIN" || role ==="ADMIN" || role === "MANAGEMENT"){
         user = await prisma.managementStaff.findUnique({
@@ -21,7 +21,7 @@ const userExistance = async({role, full_name, mobile_number}:IExistancePayload)=
     return user
 }
 
-const userCount = async({role, mobile_number}:IUserCount)=>{
+const userCount = async({role_name: role, mobile_number}:IUserCount)=>{
     let userCount=0;
     if(role==="SUPER_ADMIN" || role ==="TEACHER_ADMIN" || role ==="ADMIN" || role === "MANAGEMENT"){
         userCount = await prisma.managementStaff.count({
@@ -38,6 +38,8 @@ const userCount = async({role, mobile_number}:IUserCount)=>{
     }
     return userCount
 }
+
+
 export const userHelperFunction = {
     userExistance,
     userCount
