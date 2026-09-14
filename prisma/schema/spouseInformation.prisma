@@ -1,5 +1,5 @@
 model SpouseInformation {
-  spouse_id         String                       @id @default(uuid())
+  spouse_id         String  @id @default(uuid())
   full_name         String
   contact_no        String?
   father_name       String?
@@ -9,19 +9,19 @@ model SpouseInformation {
   occupation        String?
   job_title         String?
   monthly_income    Int?
-  
+
   present_address   PresentAddress?
   permanent_address PermanentAddress?
 
-  staff_id        String?                      @unique
-  staff           ManagementStaff? @relation(fields: [staff_id], references: [id], onDelete: Cascade)
-  
-//   created_by_id     String?
-//   created_by        User?                        @relation("spouse_information_created_by", fields: [created_by_id], references: [id])
-//   updated_by_id     String?
-//   updated_by        User?                        @relation("spouse_information_updated_by", fields: [updated_by_id], references: [id])
-  created_at        DateTime                     @default(now())
-  updated_at        DateTime?                    @updatedAt
+  staff_id String?          @unique
+  staff    ManagementStaff? @relation(fields: [staff_id], references: [id], onDelete: Cascade)
+
+  //   created_by_id     String?
+  //   created_by        User?                        @relation("spouse_information_created_by", fields: [created_by_id], references: [id])
+  //   updated_by_id     String?
+  //   updated_by        User?                        @relation("spouse_information_updated_by", fields: [updated_by_id], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   @@map("spouse_infromation")
 }

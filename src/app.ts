@@ -5,6 +5,7 @@ import { html } from "./utils/html.js";
 import { userRouter } from "./modules/user/user.route.js";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
+import { roleRouter } from "./modules/role/role.route.js";
 
 const app:Application=express();
 app.use(cors());
@@ -13,7 +14,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 app.use("/api/v1/smps/user",userRouter)
-
+app.use("/api/v1/smps/position",userRouter)
+app.use("/api/v1/smps/role",roleRouter)
 
 // basic route
 app.get("/", (req:Request, res:Response)=>{

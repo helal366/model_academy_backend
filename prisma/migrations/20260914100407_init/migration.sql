@@ -1,6 +1,29 @@
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "position_id" TEXT,
-ADD COLUMN     "role_id" TEXT;
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "BloodGroup" AS ENUM ('A_POSITIVE', 'A_NEGATIVE', 'B_POSITIVE', 'B_NEGATIVE', 'AB_POSITIVE', 'AB_NEGATIVE', 'O_POSITIVE', 'O_NEGATIVE');
+
+-- CreateEnum
+CREATE TYPE "Religion" AS ENUM ('ISLAM', 'HINDU', 'CHRISTIAN', 'BUDDO', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "Quranic_Section" AS ENUM ('NURANI', 'NAZERA', 'HIFZ');
+
+-- CreateEnum
+CREATE TYPE "WeekDays" AS ENUM ('SATURDAY', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY');
+
+-- CreateEnum
+CREATE TYPE "Months" AS ENUM ('JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER');
+
+-- CreateEnum
+CREATE TYPE "ActiveStatus" AS ENUM ('ACTIVE', 'INACTIVE');
+
+-- CreateEnum
+CREATE TYPE "AuditAction" AS ENUM ('CREATE', 'UPDATE', 'DELETE');
+
+-- CreateEnum
+CREATE TYPE "EducationDegree" AS ENUM ('SSC', 'HSC', 'BSC', 'B_COM', 'B_ARTS', 'MSC', 'M_COM', 'M_ARTS', 'PHD', 'ALIM', 'DAKHIL', 'KAMIL', 'FAZIL', 'OTHERS');
 
 -- CreateTable
 CREATE TABLE "academic_results" (
@@ -21,21 +44,61 @@ CREATE TABLE "academic_results" (
 );
 
 -- CreateTable
+CREATE TABLE "father_details" (
+    "id" TEXT NOT NULL,
+    "father_name" TEXT NOT NULL,
+    "nid_no" TEXT,
+    "occupation" TEXT,
+    "job_title" TEXT,
+    "educational_qualification" "EducationDegree",
+    "monthly_income" TEXT,
+    "mobile_no_1" TEXT,
+    "mobile_no_2" TEXT,
+    "mobile_no_3" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+
+    CONSTRAINT "father_details_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "management_staffs" (
     "id" TEXT NOT NULL,
     "full_name" TEXT NOT NULL,
     "mobile_number" TEXT NOT NULL,
     "is_mobile_verified" BOOLEAN NOT NULL DEFAULT false,
     "email" TEXT NOT NULL,
+    "is_email_verified" BOOLEAN NOT NULL DEFAULT false,
+    "user_name" TEXT,
+    "user_password" TEXT,
     "teaching_working_experience_year" INTEGER,
     "teaching_working_experience_month" INTEGER,
     "alternative_contact_no" TEXT[],
-    "current_position_id" TEXT NOT NULL,
-    "current_role_id" TEXT NOT NULL,
+    "active_status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
+    "current_position_id" TEXT,
+    "current_role_id" TEXT,
     "is_currenly_active_staff" BOOLEAN NOT NULL DEFAULT true,
     "user_id" TEXT NOT NULL,
 
     CONSTRAINT "management_staffs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "mother_details" (
+    "id" TEXT NOT NULL,
+    "mother_name" TEXT NOT NULL,
+    "nid_no" TEXT,
+    "occupation" TEXT,
+    "job_title" TEXT,
+    "educational_qualification" "EducationDegree",
+    "monthly_income" TEXT,
+    "mobile_no_1" TEXT,
+    "mobile_no_2" TEXT,
+    "mobile_no_3" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+
+    CONSTRAINT "mother_details_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -104,12 +167,38 @@ CREATE TABLE "spouse_infromation" (
 );
 
 -- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "full_name" TEXT NOT NULL,
+    "mobile_number" TEXT NOT NULL,
+    "is_mobile_verified" BOOLEAN NOT NULL DEFAULT false,
+    "email" TEXT,
+    "gender" "Gender" NOT NULL,
+    "blood_group" "BloodGroup",
+    "date_of_birth" TIMESTAMP(3),
+    "height_in_cm" DOUBLE PRECISION,
+    "weight_in_kg" DOUBLE PRECISION,
+    "religion" "Religion",
+    "nationality" TEXT NOT NULL DEFAULT 'Bangladeshi',
+    "birth_certificate_number" TEXT,
+    "nid_number" TEXT,
+    "photo_url" TEXT,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "role_id" TEXT,
+    "position_id" TEXT,
+    "father_details_id" TEXT,
+    "mother_details_id" TEXT,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "user_positions" (
     "id" TEXT NOT NULL,
     "position_name" TEXT NOT NULL,
+    "role_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
-    "role_id" TEXT NOT NULL,
 
     CONSTRAINT "user_positions_pkey" PRIMARY KEY ("id")
 );
@@ -147,6 +236,9 @@ CREATE UNIQUE INDEX "academic_results_staff_id_key" ON "academic_results"("staff
 CREATE UNIQUE INDEX "management_staffs_email_key" ON "management_staffs"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "management_staffs_user_name_key" ON "management_staffs"("user_name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "management_staffs_user_id_key" ON "management_staffs"("user_id");
 
 -- CreateIndex
@@ -168,6 +260,12 @@ CREATE UNIQUE INDEX "present_addresses_spouse_id_key" ON "present_addresses"("sp
 CREATE UNIQUE INDEX "spouse_infromation_staff_id_key" ON "spouse_infromation"("staff_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_full_name_mobile_number_key" ON "users"("full_name", "mobile_number");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "user_positions_position_name_key" ON "user_positions"("position_name");
 
 -- CreateIndex
@@ -183,10 +281,10 @@ CREATE INDEX "_roles_managements_B_index" ON "_roles_managements"("B");
 ALTER TABLE "academic_results" ADD CONSTRAINT "academic_results_staff_id_fkey" FOREIGN KEY ("staff_id") REFERENCES "management_staffs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_position_id_fkey" FOREIGN KEY ("current_position_id") REFERENCES "user_positions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_position_id_fkey" FOREIGN KEY ("current_position_id") REFERENCES "user_positions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_role_id_fkey" FOREIGN KEY ("current_role_id") REFERENCES "user_roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_role_id_fkey" FOREIGN KEY ("current_role_id") REFERENCES "user_roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -211,6 +309,12 @@ ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") 
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_position_id_fkey" FOREIGN KEY ("position_id") REFERENCES "user_positions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_father_details_id_fkey" FOREIGN KEY ("father_details_id") REFERENCES "father_details"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_mother_details_id_fkey" FOREIGN KEY ("mother_details_id") REFERENCES "mother_details"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_positions" ADD CONSTRAINT "user_positions_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "user_roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

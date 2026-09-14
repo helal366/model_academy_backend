@@ -1,17 +1,6 @@
-import { StatusCodes } from "http-status-codes"
-import { AppError } from "../../helperFunctions/globalError/globalErrorHelperFunction"
-import { UserWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
+import { IExistancePayload, IUserCount } from "./user.interface";
 
-interface IExistancePayload{
-    role: string;
-    full_name: string;
-    mobile_number: string;
-}
-interface IUserCount{
-    role: string;
-    mobile_number: string;
-}
 const userExistance = async({role, full_name, mobile_number}:IExistancePayload)=>{
     let user=null;
     if(role==="SUPER_ADMIN" || role ==="TEACHER_ADMIN" || role ==="ADMIN" || role === "MANAGEMENT"){

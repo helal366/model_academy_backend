@@ -10,7 +10,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   platform: "node",
-  external: [],
+  external: ['pg', '@prisma/client'], 
   // Add banner to shim require() for CJS dependencies in ESM context
   banner: {
     js: `

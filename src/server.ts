@@ -1,11 +1,18 @@
 import app from "./app.js";
 import { envVars } from "./configs/index.js";
 import { prisma } from "./lib/prisma.js";
+import "dotenv/config";
 
 async function connectDB() {
   try {
+    // console.log("Database Type:", typeof process.env.DATABASE_URL);
+    // console.log("Database Value:", process.env.DATABASE_URL);
+
     await prisma.$connect();
     console.log("Connected to the database successfully.");
+
+    await prisma.$queryRaw`SELECT NOW()`;
+    console.log("Database query successful.");
   } catch (error) {
     console.error("Error starting server:", error);
   }

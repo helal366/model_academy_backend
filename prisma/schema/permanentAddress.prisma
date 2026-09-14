@@ -1,5 +1,5 @@
 model PermanentAddress {
-  id            String             @id @default(uuid())
+  id            String  @id @default(uuid())
   house_no      String?
   house_name    String?
   plot_no       String?
@@ -11,22 +11,22 @@ model PermanentAddress {
   post_office   String?
   thana         String
   district      String
-  country       String             @default("Bangladesh")
-  
-  user_id       String?            @unique
-  user          User?              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  
-  spouse_id     String?            @unique
-  spouse        SpouseInformation? @relation(fields: [spouse_id], references: [spouse_id], onDelete: Cascade)
-  
+  country       String  @default("Bangladesh")
+
+  user_id String? @unique
+  user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  spouse_id String?            @unique
+  spouse    SpouseInformation? @relation(fields: [spouse_id], references: [spouse_id], onDelete: Cascade)
+
   // created_by_id String?
   // created_by    User?              @relation("permanent_address_created_by", fields: [created_by_id], references: [id])
-  
+
   // updated_by_id String?
   // updated_by    User?              @relation("permanent_address_updated_by", fields: [updated_by_id], references: [id])
-  
-  created_at    DateTime           @default(now())
-  updated_at    DateTime?          @updatedAt
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   @@map("permanent_addresses")
 }

@@ -1,44 +1,39 @@
-model User{
-   id                                             String                                @id @default(uuid())
-  full_name                                      String
-  mobile_number                                  String
-  is_mobile_verified                             Boolean                               @default(false)
-  gender                                         Gender
-  email                                          String?                               @unique
-  blood_group                                    BloodGroup?
-  date_of_birth                                  DateTime?
-  height_in_cm                                   Float?
-  weight_in_kg                                   Float?
-  religion                                       Religion?
-  nationality                                    String                                @default("Bangladeshi")
-  birth_certificate_number                       String?
-  nid_number                                     String?
-  photo_url                                      String?
-  
-  user_name                                      String?                               @unique
-  user_password                                  String?                               @default("sm1234ps")
-  active_status                                  ActiveStatus                          @default(ACTIVE)
-  is_deleted                                     Boolean                               @default(false)
+model User {
+  id                       String      @id @default(uuid())
+  full_name                String
+  mobile_number            String
+  is_mobile_verified       Boolean     @default(false)
+  email                    String?     @unique
+  gender                   Gender
+  blood_group              BloodGroup?
+  date_of_birth            DateTime?
+  height_in_cm             Float?
+  weight_in_kg             Float?
+  religion                 Religion?
+  nationality              String      @default("Bangladeshi")
+  birth_certificate_number String?
+  nid_number               String?
+  photo_url                String?
 
-  role_id                                      String?
-  role                                           UserRole?                             @relation("user_role_relation", fields: [role_id], references: [role_name])
+  is_deleted    Boolean      @default(false)
 
-  position_id                                    String?
-  position                                       UserPosition?                         @relation("user_position_relation", fields: [position_id], references: [id], onDelete: Restrict)
+  role_id String?
+  role    UserRole? @relation("user_role_relation", fields: [role_id], references: [role_name])
 
-  management_staff_profile          ManagementStaff?
+  position_id String?
+  position    UserPosition? @relation("user_position_relation", fields: [position_id], references: [id], onDelete: Restrict)
 
-  father_details_id                              String?
-  father_details                                 FatherDetails?                    @relation("user_father_details", fields: [father_details_id], references: [id], onDelete: Restrict)
+  management_staff_profile ManagementStaff?
 
-  mother_details_id                              String?
-  mother_details                                 MotherDetails?                    @relation("user_mother_details", fields: [mother_details_id], references: [id], onDelete: Restrict)
+  father_details_id String?
+  father_details    FatherDetails? @relation("user_father_details", fields: [father_details_id], references: [id], onDelete: Restrict)
 
-   permanent_address                              PermanentAddress?
-  present_address                                PresentAddress?
-  
-  
+  mother_details_id String?
+  mother_details    MotherDetails? @relation("user_mother_details", fields: [mother_details_id], references: [id], onDelete: Restrict)
+
+  permanent_address PermanentAddress?
+  present_address   PresentAddress?
+
   @@unique([full_name, mobile_number], name: "user_full_name_mobile_unique")
   @@map("users")
-
 }
