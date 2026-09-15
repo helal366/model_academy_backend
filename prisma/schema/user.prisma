@@ -1,9 +1,13 @@
 model User {
   id                       String      @id @default(uuid())
   full_name                String
+
   mobile_number            String
   is_mobile_verified       Boolean     @default(false)
+
   email                    String?     @unique
+  is_email_verified Boolean @default(false)
+
   gender                   Gender
   blood_group              BloodGroup?
   date_of_birth            DateTime?
@@ -15,6 +19,10 @@ model User {
   nid_number               String?
   photo_url                String?
 
+  user_name     String? @unique
+  user_password String? 
+
+  active_status ActiveStatus @default(ACTIVE)
   is_deleted    Boolean      @default(false)
 
   role_id String?

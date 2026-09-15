@@ -16,7 +16,7 @@ const createPosition = async (payload: TCreatePositionZodSchema) => {
   });
   if (existingPosition) {
     throw new AppError(
-      `Your provided position : ${position_name} already exists.`,
+      `Your provided position : ${cleanPosition} already exists.`,
       StatusCodes.CONFLICT,
     );
   }
@@ -27,7 +27,7 @@ const createPosition = async (payload: TCreatePositionZodSchema) => {
   });
   if (!existingRole) {
     throw new AppError(
-      `Your provided role : ${role_name} does not exist.`,
+      `Your provided role : ${cleanRole} does not exist.`,
       StatusCodes.NOT_FOUND,
     );
   }

@@ -66,19 +66,14 @@ CREATE TABLE "management_staffs" (
     "id" TEXT NOT NULL,
     "full_name" TEXT NOT NULL,
     "mobile_number" TEXT NOT NULL,
-    "is_mobile_verified" BOOLEAN NOT NULL DEFAULT false,
     "email" TEXT NOT NULL,
-    "is_email_verified" BOOLEAN NOT NULL DEFAULT false,
-    "user_name" TEXT,
-    "user_password" TEXT,
     "teaching_working_experience_year" INTEGER,
     "teaching_working_experience_month" INTEGER,
     "alternative_contact_no" TEXT[],
-    "active_status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
+    "user_id" TEXT NOT NULL,
     "current_position_id" TEXT,
     "current_role_id" TEXT,
     "is_currenly_active_staff" BOOLEAN NOT NULL DEFAULT true,
-    "user_id" TEXT NOT NULL,
 
     CONSTRAINT "management_staffs_pkey" PRIMARY KEY ("id")
 );
@@ -173,6 +168,7 @@ CREATE TABLE "users" (
     "mobile_number" TEXT NOT NULL,
     "is_mobile_verified" BOOLEAN NOT NULL DEFAULT false,
     "email" TEXT,
+    "is_email_verified" BOOLEAN NOT NULL DEFAULT false,
     "gender" "Gender" NOT NULL,
     "blood_group" "BloodGroup",
     "date_of_birth" TIMESTAMP(3),
@@ -183,6 +179,9 @@ CREATE TABLE "users" (
     "birth_certificate_number" TEXT,
     "nid_number" TEXT,
     "photo_url" TEXT,
+    "user_name" TEXT,
+    "user_password" TEXT,
+    "active_status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "role_id" TEXT,
     "position_id" TEXT,
@@ -236,9 +235,6 @@ CREATE UNIQUE INDEX "academic_results_staff_id_key" ON "academic_results"("staff
 CREATE UNIQUE INDEX "management_staffs_email_key" ON "management_staffs"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "management_staffs_user_name_key" ON "management_staffs"("user_name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "management_staffs_user_id_key" ON "management_staffs"("user_id");
 
 -- CreateIndex
@@ -263,6 +259,9 @@ CREATE UNIQUE INDEX "spouse_infromation_staff_id_key" ON "spouse_infromation"("s
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_user_name_key" ON "users"("user_name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_full_name_mobile_number_key" ON "users"("full_name", "mobile_number");
 
 -- CreateIndex
@@ -281,13 +280,13 @@ CREATE INDEX "_roles_managements_B_index" ON "_roles_managements"("B");
 ALTER TABLE "academic_results" ADD CONSTRAINT "academic_results_staff_id_fkey" FOREIGN KEY ("staff_id") REFERENCES "management_staffs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_position_id_fkey" FOREIGN KEY ("current_position_id") REFERENCES "user_positions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_role_id_fkey" FOREIGN KEY ("current_role_id") REFERENCES "user_roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_position_id_fkey" FOREIGN KEY ("current_position_id") REFERENCES "user_positions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "management_staffs" ADD CONSTRAINT "management_staffs_current_role_id_fkey" FOREIGN KEY ("current_role_id") REFERENCES "user_roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "permanent_addresses" ADD CONSTRAINT "permanent_addresses_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -305,7 +304,7 @@ ALTER TABLE "present_addresses" ADD CONSTRAINT "present_addresses_spouse_id_fkey
 ALTER TABLE "spouse_infromation" ADD CONSTRAINT "spouse_infromation_staff_id_fkey" FOREIGN KEY ("staff_id") REFERENCES "management_staffs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "user_roles"("role_name") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "user_roles"("role_name") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_position_id_fkey" FOREIGN KEY ("position_id") REFERENCES "user_positions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

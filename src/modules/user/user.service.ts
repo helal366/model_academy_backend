@@ -59,6 +59,7 @@ const createUser = async (payload: TUserCreatePayload) => {
       mobile_number,
       email,
       ...rest,
+      user_name,
       role: {
         connect: { role_name: cleanRole },
       },
@@ -70,7 +71,6 @@ const createUser = async (payload: TUserCreatePayload) => {
           full_name,
           mobile_number,
           email,
-          user_name,
           current_position: {
             connect: { id: positionExists.id },    //connection require unique constraints
           },

@@ -13,7 +13,7 @@ const createRole = async (payload: TCreateRoleZodSchema) => {
   });
   if (checkExistance) {
     throw new AppError(
-      `Your provided role : ${role_name} already exixts.`,
+      `Your provided role : ${cleanRole} already exixts.`,
       StatusCodes.CONFLICT,
     );
   }

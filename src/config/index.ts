@@ -13,6 +13,10 @@ interface IEnvVariables {
   BCRYPT_SALT_ROUND: string;
   APP_LOCAL_URL: string;
   COMMON_PASSWORD:string;
+  SMTP_USERNAME:string;
+  EMAIL_SENDER:string;
+  EMAIL_SENDER_NAME:string;
+  SMTP_PASSWORD:string;
 }
 const loadEnvVariables = (): IEnvVariables => {
   const envVars: string[] = [
@@ -27,6 +31,10 @@ const loadEnvVariables = (): IEnvVariables => {
     "JWT_REFRESH_EXPIRES_IN",
     "APP_LOCAL_URL",
     "COMMON_PASSWORD",
+    "SMTP_USERNAME",
+    "EMAIL_SENDER",
+    "EMAIL_SENDER_NAME",
+    "SMTP_PASSWORD"
   ];
   for (const varName of envVars) {
     if (!process.env[varName]) {
@@ -45,6 +53,10 @@ const loadEnvVariables = (): IEnvVariables => {
     BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
     APP_LOCAL_URL: process.env.APP_LOCAL_URL as string,
     COMMON_PASSWORD: process.env.COMMON_PASSWORD as string,
-  };
+    SMTP_USERNAME: process.env.SMTP_USERNAME as string,
+    EMAIL_SENDER: process.env.EMAIL_SENDER as string,
+    EMAIL_SENDER_NAME: process.env.EMAIL_SENDER_NAME as string,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD as string
+  }; 
 };
 export const envVars = loadEnvVariables();
