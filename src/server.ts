@@ -2,6 +2,7 @@ import app from "./app.js";
 import { envVars } from "./config/index.js";
 import { prisma } from "./lib/prisma.js";
 import "dotenv/config";
+import { redisClient } from "./lib/redis.js";
 
 async function connectDB() {
   try {
@@ -10,6 +11,9 @@ async function connectDB() {
 
     await prisma.$connect();
     console.log("Connected to the database successfully.");
+
+    await redisClient.connect();
+		console.log("Redis connected successfully.");
 
     await prisma.$queryRaw`SELECT NOW()`;
     console.log("Database query successful.");

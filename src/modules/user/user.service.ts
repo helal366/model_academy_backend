@@ -59,9 +59,27 @@ const createUser = async (payload: TUserCreatePayload) => {
     user_name = `${mobile_number}-${userCount + 1}`;
   }
 
+  // Generate OTP and structure configurations
+  const expirationSeconds = 5 * 60;
+  const otpKey = `new_user_welcome_otp:${email}`;
+  const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+  // Compile EJS template outside or inside transaction safely
+  const templatePath = path.join(
+    process.cwd(),
+    "src/templates/create_user_email_verify.ejs"
+  );
+  const templateData = {
+    name: full_name,
+    OTP: otpValue,
+    expirationMinutes: expirationSeconds / 60,
+    year: new Date().getFullYear()
+  };
+  const html = await ejs.renderFile(templatePath, templateData);
+
   // create user and management staff
-  const newUser = await prisma.$transaction(async(prisma)=>{
-    const user = await prisma.user.create({
+  const newUser = await prisma.$transaction(async(tx)=>{
+    const user = await tx.user.create({
       data: {
         full_name,
         mobile_number,
@@ -90,37 +108,18 @@ const createUser = async (payload: TUserCreatePayload) => {
       },
     });
 
-
+    // redis client set 
+    await redisClient.set(otpKey, otpValue, {
+      expiration: {
+        type: "EX",
+        value: expirationSeconds
+      }
+    });
+      
     return user;
-  })
-
-  // congrats to new created user by email and send otp to verify email.
-  // redis client set
-  const expirationSeconds = 5*60;
-  const otpKey = `new_user_welcome_otp:${email}`;
-  const otpValue = crypto.randomInt(100000, 1000000).toString();
-
-  await redisClient.set(otpKey, otpValue, {
-    expiration: {
-      type: "EX",
-      value: expirationSeconds
-    }
   });
-  // html set for nodemailer
-  const templatePath = path.join(
-    process.cwd(),
-    "src/templates/create_user_email_verify.ejs"
-  );
-
-  const templateData= {
-    name: full_name,
-    OTP: otpValue,
-    expirationMinutes: expirationSeconds/60,
-    year: new Date().getFullYear()
-  }
-
-  const html = await ejs.renderFile(templatePath, templateData);
-
+  
+  // congrats to new created user by email and send otp to verify email.
   // set nodemailler transporter
   try {
     await transporter.sendMail({
