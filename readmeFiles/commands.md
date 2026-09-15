@@ -12,6 +12,8 @@
 * pnpm store prune
 * pnpm config set fetch-timeout 60000
 
+* redis-cli ping
+
 
 1. Remove the .env file from the Git index (stops tracking it)
 - The --cached flag ensures it stays on your computer and ONLY gets removed from Git.

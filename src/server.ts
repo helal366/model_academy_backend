@@ -3,6 +3,7 @@ import { envVars } from "./config/index.js";
 import { prisma } from "./lib/prisma.js";
 import "dotenv/config";
 import { redisClient } from "./lib/redis.js";
+import { transporter } from "./lib/nodemailer.js";
 
 async function connectDB() {
   try {
@@ -14,6 +15,9 @@ async function connectDB() {
 
     await redisClient.connect();
 		console.log("Redis connected successfully.");
+
+    await transporter.verify();
+		console.log("Nodemailer connected successfully.")
 
     await prisma.$queryRaw`SELECT NOW()`;
     console.log("Database query successful.");

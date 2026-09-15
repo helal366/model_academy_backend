@@ -78,52 +78,47 @@ const createUser = async (payload: TUserCreatePayload) => {
   const html = await ejs.renderFile(templatePath, templateData);
 
   // create user and management staff
-  const newUser = await prisma.$transaction(async(tx)=>{
-    const user = await tx.user.create({
-      data: {
-        full_name,
-        mobile_number,
-        email,
-        ...rest,
-        user_name,
-        role: {
-          connect: { role_name: cleanRole },
-        },
-        position: {
-          connect: { id: positionExists.id },
-        },
-        management_staff_profile: {
-          create: {
-            full_name,
-            mobile_number,
-            email,
-            current_position: {
-              connect: { id: positionExists.id },    //connection require unique constraints
-            },
-            current_role: {
-              connect: { id: roleExists.id },     //connection require unique constraints
-            },
+  const newUser = await prisma.user.create({
+    data: {
+      full_name,
+      mobile_number,
+      email,
+      ...rest,
+      user_name,
+      role: {
+        connect: { role_name: cleanRole },
+      },
+      position: {
+        connect: { id: positionExists.id },
+      },
+      management_staff_profile: {
+        create: {
+          full_name,
+          mobile_number,
+          email,
+          current_position: {
+            connect: { id: positionExists.id },    //connection require unique constraints
+          },
+          current_role: {
+            connect: { id: roleExists.id },     //connection require unique constraints
           },
         },
       },
-    });
-
-    // redis client set 
-    await redisClient.set(otpKey, otpValue, {
-      expiration: {
-        type: "EX",
-        value: expirationSeconds
-      }
-    });
-      
-    return user;
+    },
+  });
+  // redis client set otp
+  await redisClient.set(otpKey, otpValue, {
+    expiration: {
+      type: "EX",
+      value: expirationSeconds
+    }
   });
   
   // congrats to new created user by email and send otp to verify email.
   // set nodemailler transporter
   try {
     await transporter.sendMail({
-      from: `"${envVars.EMAIL_SENDER_NAME}"  <"${envVars.EMAIL_SENDER}">`,
+      from: `"${envVars.EMAIL_SENDER_NAME}"  <${envVars.EMAIL_SENDER}>`,
       to: email,
       subject: `Welcome To Model Academy. Verify Your Email Address`,
       html
