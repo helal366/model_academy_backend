@@ -1,7 +1,13 @@
 import { Router } from "express";
 import { roleController } from "./role.controller";
+import { validateZodSchema } from "../../middlewares/validate.zod.schema.js";
+import { createRoleZodSchema } from "./role.zod.validation.js";
 
 const router = Router();
-router.post("/create_role", roleController.createRole);
+router.post(
+  "/create_role",
+  validateZodSchema(createRoleZodSchema),
+  roleController.createRole,
+);
 
-export const roleRouter:Router = router;
+export const roleRouter: Router = router;

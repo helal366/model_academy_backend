@@ -8,6 +8,7 @@ import { notFound } from "./middlewares/notFound.js";
 import { roleRouter } from "./modules/role/role.route.js";
 import { positionRouter } from "./modules/position/position.route.js";
 import { authRouter } from "./modules/auth/auth.route.js";
+import { emailRouter } from "./modules/email/email.route.js";
 
 const app:Application=express();
 app.use(cors());
@@ -15,7 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
-app.use("/api/v1/smps/auth", authRouter)
+app.use("/api/v1/smps/auth", authRouter);
+app.use("/api/v1/smps/send_email", emailRouter);
 app.use("/api/v1/smps/user",userRouter)
 app.use("/api/v1/smps/position",positionRouter)
 app.use("/api/v1/smps/role",roleRouter)
