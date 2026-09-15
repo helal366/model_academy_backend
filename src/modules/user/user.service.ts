@@ -5,6 +5,13 @@ import { TUserCreatePayload } from "./user.zod.validation";
 import { findRoleExistance } from "../../helperFunctions/cachedData/cache_roles";
 import { checkRolePositionPair } from "../../helperFunctions/cachedData/cache_positions";
 import { prisma } from "../../lib/prisma";
+import crypto from "crypto";
+import { redisClient } from "../../lib/redis";
+import path from "path";
+import ejs from "ejs";
+import bcrypt from "bcryptjs";
+import { transporter } from "../../lib/nodemailer";
+import { envVars } from "../../config";
 
 const createUser = async (payload: TUserCreatePayload) => {
   const { full_name, mobile_number, email, position_name, role_name, ...rest } =
@@ -53,34 +60,80 @@ const createUser = async (payload: TUserCreatePayload) => {
   }
 
   // create user and management staff
-  const newUser = await prisma.user.create({
-    data: {
-      full_name,
-      mobile_number,
-      email,
-      ...rest,
-      user_name,
-      role: {
-        connect: { role_name: cleanRole },
-      },
-      position: {
-        connect: { id: positionExists.id },
-      },
-      management_staff_profile: {
-        create: {
-          full_name,
-          mobile_number,
-          email,
-          current_position: {
-            connect: { id: positionExists.id },    //connection require unique constraints
-          },
-          current_role: {
-            connect: { id: roleExists.id },     //connection require unique constraints
+  const newUser = await prisma.$transaction(async(prisma)=>{
+    const user = await prisma.user.create({
+      data: {
+        full_name,
+        mobile_number,
+        email,
+        ...rest,
+        user_name,
+        role: {
+          connect: { role_name: cleanRole },
+        },
+        position: {
+          connect: { id: positionExists.id },
+        },
+        management_staff_profile: {
+          create: {
+            full_name,
+            mobile_number,
+            email,
+            current_position: {
+              connect: { id: positionExists.id },    //connection require unique constraints
+            },
+            current_role: {
+              connect: { id: roleExists.id },     //connection require unique constraints
+            },
           },
         },
       },
-    },
+    });
+
+
+    return user;
+  })
+
+  // congrats to new created user by email and send otp to verify email.
+  // redis client set
+  const expirationSeconds = 5*60;
+  const otpKey = `new_user_welcome_otp:${email}`;
+  const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+  await redisClient.set(otpKey, otpValue, {
+    expiration: {
+      type: "EX",
+      value: expirationSeconds
+    }
   });
+  // html set for nodemailer
+  const templatePath = path.join(
+    process.cwd(),
+    "src/templates/create_user_email_verify.ejs"
+  );
+
+  const templateData= {
+    name: full_name,
+    OTP: otpValue,
+    expirationMinutes: expirationSeconds/60,
+    year: new Date().getFullYear()
+  }
+
+  const html = await ejs.renderFile(templatePath, templateData);
+
+  // set nodemailler transporter
+  try {
+    await transporter.sendMail({
+      from: `"${envVars.EMAIL_SENDER_NAME}"  <"${envVars.EMAIL_SENDER}">`,
+      to: email,
+      subject: `Welcome To Model Academy. Verify Your Email Address`,
+      html
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to send email.";
+    throw new AppError(message, StatusCodes.BAD_REQUEST)
+  }
+
   return newUser;
 };
 export const userServices = {

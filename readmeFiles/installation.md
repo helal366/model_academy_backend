@@ -344,12 +344,13 @@ export ENABLE_EXPERIMENTAL_COREPACK=1
 vercel --prod --force
 
 ```
-### nodemailer, multer and redis install
+### nodemailer, multer, redis and ejs install
 * installation commands:
 ```
 pnpm add nodemailer && pnpm add -D @types/nodemailer
 pnpm add multer && pnpm add -D @types/multer
 pnpm add redis
+pnpm add ejs & pnpm add -D @types/ejs
 ```
 
 * nodemailer transporter setup
